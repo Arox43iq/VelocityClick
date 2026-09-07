@@ -356,12 +356,10 @@
         loadUtterances(isDark);
       }
 
-      // Animación fluida de cambio de tema estilo Telegram (Círculo expansivo desde el botón)
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
 
-        // Si el navegador soporta View Transitions API (Chrome/Edge modernos), lo hace nativo e impecable
         if (document.startViewTransition) {
           document.startViewTransition(() => {
             localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
@@ -370,11 +368,9 @@
           return;
         }
 
-        // Fallback elegante con expansión circular por coordenadas del botón
         const rect = event.target.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
-
         const maxRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
         
         const clipDiv = document.createElement('div');
@@ -466,7 +462,6 @@
           }
           timeLeft = remainingMs / 1000;
           if (timerElement) timerElement.textContent = formatTime(timeLeft);
-          let currentSecondFloor = Math.ceil(timeLeft);
           let currentSecondFloor = Math.ceil(timeLeft);
           if (currentSecondFloor < lastSecondChecked) {
             cpsHistory.push(clicksThisSecond);
