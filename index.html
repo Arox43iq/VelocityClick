@@ -81,6 +81,7 @@
       position: relative;
       padding: 25px 15px;
       background-color: var(--container-bg);
+      background-clip: padding-box;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       text-align: center;
@@ -106,7 +107,7 @@
     }
 
     .dark-mode .bordered-container::before {
-      filter: invert(0.9) hue-rotate(180deg) brightness(0.25);
+      filter: invert(1) hue-rotate(180deg) brightness(0.7);
     }
 
     .bordered-container > * {
@@ -172,7 +173,6 @@
       box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
       transition: all 0.1s ease;
       display: block;
-      /* Evita el destello gris al tocar en móviles */
       -webkit-tap-highlight-color: transparent; 
     }
     button#clicker:hover { background: linear-gradient(135deg, #43A047, #388E3C); transform: translateY(-2px); }
