@@ -7,34 +7,34 @@
   <title>VelocityClick - The Ultimate CPS Test</title>
   <style>
     :root {
-      --bg-color: #f8f9fa;
+      --bg-color: #f4f6f9;
       --container-bg: #ffffff;
-      --text-main: #212529;
-      --text-sub: #6c757d;
-      --btn-bg: #f1f3f5;
-      --btn-border: #dee2e6;
-      --btn-hover: #e9ecef;
+      --text-main: #1a1a1a;
+      --text-sub: #65676b;
+      --btn-bg: #f0f2f5;
+      --btn-border: #e4e6eb;
+      --btn-hover: #e4e6eb;
       --btn-text: #e67e22;
-      --border-color: #e3e6f0;
-      --shadow-color: rgba(0, 0, 0, 0.06);
+      --border-color: #eee;
+      --shadow-color: rgba(0, 0, 0, 0.08);
       --stats-bg: #e8f5e9;
       --stats-border: #a5d6a7;
       --stats-color: #2e7d32;
     }
 
     .dark-mode {
-      --bg-color: #121212;
-      --container-bg: #1e1e1e;
-      --text-main: #f8f9fa;
-      --text-sub: #adb5bd;
-      --btn-bg: #2b2b2b;
-      --btn-border: #383838;
-      --btn-hover: #3a3a3a;
+      --bg-color: #0f1115;
+      --container-bg: #181b22;
+      --text-main: #f0f2f5;
+      --text-sub: #9e9ea0;
+      --btn-bg: #21252d;
+      --btn-border: #2f3542;
+      --btn-hover: #292f3b;
       --btn-text: #ffa726;
-      --border-color: #333333;
-      --shadow-color: rgba(0, 0, 0, 0.4);
-      --stats-bg: #1b2e1b;
-      --stats-border: #2e7d32;
+      --border-color: #262c36;
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --stats-bg: #132215;
+      --stats-border: #1e4620;
       --stats-color: #81c784;
     }
 
@@ -44,8 +44,8 @@
       margin: 0;
       padding: 20px;
       user-select: none;
-      transition: background-color 0.3s ease, color 0.3s ease;
       box-sizing: border-box;
+      color: var(--text-main);
     }
 
     *, *:before, *:after { box-sizing: inherit; }
@@ -56,7 +56,7 @@
       align-items: flex-start;
       gap: 24px;
       max-width: 1150px;
-      margin: 40px auto;
+      margin: 30px auto;
     }
 
     .game-column, .sidebar-column {
@@ -68,23 +68,25 @@
       gap: 20px;
     }
 
-    /* Contenedor principal con diseño CSS puro y elegante */
     .clean-card {
       background-color: var(--container-bg);
-      border-radius: 24px;
+      border-radius: 28px;
       padding: 35px 25px;
-      box-shadow: 0 12px 35px var(--shadow-color);
-      border: 2px solid var(--border-color);
+      box-shadow: 0 15px 40px var(--shadow-color);
+      border: 1px solid var(--border-color);
       text-align: center;
-      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     h1 {
-      font-size: 2rem;
-      margin: 0 0 4px;
-      color: var(--text-main);
+      font-size: 2.2rem;
+      margin: 0 0 2px;
       font-weight: 800;
       letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .subtitle {
@@ -92,8 +94,8 @@
       color: var(--text-sub);
       margin-bottom: 24px;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 600;
+      letter-spacing: 2.5px;
+      font-weight: 700;
     }
 
     .top-actions {
@@ -110,16 +112,17 @@
       color: var(--text-main);
       font-weight: 600;
       padding: 8px 16px;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       font-size: 0.85rem;
       text-decoration: none;
     }
 
     .top-btn:hover, .time-btn:hover {
       background-color: var(--btn-hover);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .top-btn { color: var(--btn-text); }
@@ -137,10 +140,10 @@
     }
 
     .time-btn.active {
-      background-color: #e67e22;
+      background: linear-gradient(135deg, #e67e22, #d35400);
       color: white;
-      border-color: #d35400;
-      box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
     }
 
     #instructions {
@@ -150,61 +153,61 @@
     }
 
     #timer {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 600;
       color: var(--text-sub);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     #score {
-      font-size: 4rem;
+      font-size: 4.2rem;
       font-weight: 900;
-      color: var(--text-main);
-      margin: 5px 0 20px;
+      margin: 0 0 20px;
       line-height: 1;
+      letter-spacing: -2px;
     }
 
     button#clicker {
       width: 100%;
       max-width: 320px;
       padding: 24px 20px;
-      font-size: 1.8rem;
-      font-weight: bold;
+      font-size: 1.9rem;
+      font-weight: 800;
       margin: 0 auto 15px auto;
       cursor: pointer;
-      border-radius: 18px;
+      border-radius: 20px;
       border: none;
-      background: linear-gradient(135deg, #4CAF50, #388E3C);
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
       color: white;
-      box-shadow: 0 8px 22px rgba(76, 175, 80, 0.35);
+      box-shadow: 0 8px 25px rgba(46, 204, 113, 0.35);
       transition: all 0.1s ease;
       display: block;
       -webkit-tap-highlight-color: transparent;
     }
 
     button#clicker:hover {
-      background: linear-gradient(135deg, #43A047, #2E7D32);
+      background: linear-gradient(135deg, #27ae60, #219653);
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(76, 175, 80, 0.45);
+      box-shadow: 0 12px 30px rgba(46, 204, 113, 0.45);
     }
 
     button#clicker:active {
-      transform: translateY(2px);
-      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+      transform: scale(0.97) translateY(2px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
     }
 
     #resetBtn {
       padding: 10px 24px;
       font-size: 0.95rem;
       font-weight: bold;
-      background: linear-gradient(135deg, #f44336, #d32f2f);
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
       color: white;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
       display: none;
       margin: 15px auto 0 auto;
-      box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
       transition: all 0.2s ease;
     }
     #resetBtn:hover { transform: translateY(-1px); }
@@ -215,29 +218,27 @@
       line-height: 1.6;
       display: none;
       border: 1px solid var(--stats-border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 16px;
       background-color: var(--stats-bg);
       color: var(--stats-color);
       text-align: left;
+      animation: fadeIn 0.4s ease;
     }
 
     #stats p { margin: 4px 0; }
 
-    /* Sección de Comentarios */
     .comments-container {
       background-color: var(--container-bg);
-      border-radius: 24px;
-      padding: 25px;
-      box-shadow: 0 12px 35px var(--shadow-color);
-      border: 2px solid var(--border-color);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 15px 40px var(--shadow-color);
+      border: 1px solid var(--border-color);
       text-align: left;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     .comments-container h3 {
       margin-top: 0;
-      color: var(--text-main);
       font-size: 1.2rem;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 12px;
@@ -250,6 +251,11 @@
       font-size: 0.8rem;
       color: var(--text-sub);
       margin-bottom: 15px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 900px) {
@@ -269,7 +275,7 @@
         
         <div class="top-actions">
           <a href="https://github.com/Arox43iq?tab=repositories" target="_blank" class="top-btn" id="projects-link-text">🚀 Proyectos</a>
-          <button class="top-btn" id="theme-toggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+          <button class="top-btn" id="theme-toggle" onclick="toggleTheme(event)">🌙 Modo Oscuro</button>
         </div>
 
         <div id="time-selector">
@@ -335,7 +341,7 @@
         const script = document.createElement('script');
         script.src = 'https://utteranc.es/client.js';
         script.setAttribute('repo', 'Arox43iq/Clicks-Per-Second-Test');
-        script.setAttribute('issue-number', '1'); // Enlace directo a tu issue
+        script.setAttribute('issue-number', '1');
         script.setAttribute('theme', isDark ? 'github-dark' : 'github-light');
         script.setAttribute('crossorigin', 'anonymous');
         script.async = true;
@@ -350,11 +356,50 @@
         loadUtterances(isDark);
       }
 
-      window.toggleTheme = function() {
+      // Animación fluida de cambio de tema estilo Telegram (Círculo expansivo desde el botón)
+      window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
-        localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
-        setThemeUI(newDarkState);
+
+        // Si el navegador soporta View Transitions API (Chrome/Edge modernos), lo hace nativo e impecable
+        if (document.startViewTransition) {
+          document.startViewTransition(() => {
+            localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
+            setThemeUI(newDarkState);
+          });
+          return;
+        }
+
+        // Fallback elegante con expansión circular por coordenadas del botón
+        const rect = event.target.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        const maxRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+        
+        const clipDiv = document.createElement('div');
+        clipDiv.style.position = 'fixed';
+        clipDiv.style.top = '0';
+        clipDiv.style.left = '0';
+        clipDiv.style.width = '100vw';
+        clipDiv.style.height = '100vh';
+        clipDiv.style.zIndex = '999999';
+        clipDiv.style.pointerEvents = 'none';
+        clipDiv.style.backgroundColor = newDarkState ? '#181b22' : '#ffffff';
+        clipDiv.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+        clipDiv.style.transition = 'clip-path 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        
+        document.body.appendChild(clipDiv);
+
+        requestAnimationFrame(() => {
+          clipDiv.style.clipPath = `circle(${maxRadius}px at ${x}px ${y}px)`;
+        });
+
+        setTimeout(() => {
+          localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
+          setThemeUI(newDarkState);
+          setTimeout(() => clipDiv.remove(), 100);
+        }, 500);
       };
 
       setThemeUI(localStorage.getItem('velocityClickTheme') === 'dark');
@@ -401,7 +446,7 @@
       function startTimer() {
         if (timer) return;
         gameStarted = true;
-        document.querySelectorAll('.time-btn').forEach(btn => btn.style.opacity = '0.6');
+        document.querySelectorAll('.time-btn').forEach(btn => btn.style.opacity = '0.5');
         let startTime = performance.now(), durationMs = timeTotal * 1000;
 
         timer = setInterval(() => {
@@ -421,6 +466,7 @@
           }
           timeLeft = remainingMs / 1000;
           if (timerElement) timerElement.textContent = formatTime(timeLeft);
+          let currentSecondFloor = Math.ceil(timeLeft);
           let currentSecondFloor = Math.ceil(timeLeft);
           if (currentSecondFloor < lastSecondChecked) {
             cpsHistory.push(clicksThisSecond);
