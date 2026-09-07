@@ -1,8 +1,19 @@
+Para hacer que tu página se vea perfecta en celulares y tablets sin que los elementos se encojan o se vean minimizados, el problema principal es la etiqueta viewport en el <head> y los tamaños fijos (como los paddings del botón grande o el ancho de las columnas).
+
+Aquí tienes el código mejorado. Los cambios clave son:
+
+Meta Viewport: Se agregó <meta name="viewport" content="width=device-width, initial-scale=1.0"> para que los celulares sepan que deben escalar la página correctamente a su tamaño real de pantalla.
+
+Media Queries responsivas: Se adaptó el diseño para que en pantallas chicas la tarjeta principal no tenga márgenes excesivos, los botones de tiempo se acomoden en filas o se ajusten, y el botón de clics ocupe un espacio cómodo para los dedos (touch-friendly).
+
+Código actualizado:
+HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <link rel="icon" href="favicon.png" type="image/png" />
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VelocityClick - The Ultimate CPS Test</title>
   <style>
     :root {
@@ -17,7 +28,6 @@
       --stats-bg: #f1f8e9;
       --stats-border: #a5d6a7;
       --stats-color: #2e7d32;
-      --border-filter: none;
     }
 
     .dark-mode {
@@ -32,24 +42,27 @@
       --stats-bg: #1b2e1b;
       --stats-border: #2e7d32;
       --stats-color: #81c784;
-      /* Filtro que oscurece el fondo blanco del Borde.png */
-      --border-filter: invert(0.85) hue-rotate(180deg) brightness(0.35);
     }
 
     html, body {
       background-color: var(--bg-color);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 15px;
       user-select: none;
       transition: background-color 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
     }
 
     .main-layout {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 30px;
+      gap: 20px;
       max-width: 1150px;
       margin: 0 auto;
     }
@@ -64,56 +77,40 @@
     }
 
     .comments-container {
-      padding: 30px;
+      padding: 20px;
       background-color: var(--container-bg);
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       text-align: left;
       transition: background-color 0.3s ease, border-color 0.3s ease;
-      box-sizing: border-box;
       border: 1px solid var(--btn-border);
     }
 
-    /* Contenedor del juego con aislamiento perfecto del borde */
+    /* Contenedor del juego con aislamiento seguro del borde */
     .bordered-container {
       position: relative;
-      padding: 30px;
+      padding: 25px 15px;
       background-color: var(--container-bg);
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       text-align: center;
       transition: background-color 0.3s ease;
-      box-sizing: border-box;
-      border: 35px solid transparent;
+      border: 25px solid transparent;
       border-image-source: url('Borde.png');
       border-image-slice: 33%;
       border-image-repeat: round;
-      border-image-width: 35px;
+      border-image-width: 25px;
     }
 
-    /* Aplicamos el filtro usando un pseudo-elemento detrás o nativo sobre la propiedad del borde sin afectar hijos */
-    .dark-mode .bordered-container {
-      filter: none; /* Aseguramos que el contenido hijo NUNCA reciba el filtro */
-      border-image: url('Borde.png') 33% / 35px round;
-    }
-    
-    /* Truco CSS para oscurecer específicamente la capa del borde de la imagen manteniendo nítido el contenido */
-    .dark-mode .bordered-container {
-      border-image-source: url('Borde.png');
-      /* Usamos un truco de máscara de capa o filtro aplicado individualmente si el navegador lo soporta, 
-         o una capa superpuesta para el borde */
-    }
-
-    /* Solución robusta: Capa auxiliar transparente para el borde con filtro en modo oscuro */
     .bordered-container::before {
       content: "";
       position: absolute;
-      top: -35px; left: -35px; right: -35px; bottom: -35px;
-      border: 35px solid transparent;
+      top: -25px; left: -25px; right: -25px; bottom: -25px;
+      border: 25px solid transparent;
       border-image-source: url('Borde.png');
       border-image-slice: 33%;
       border-image-repeat: round;
-      border-image-width: 35px;
+      border-image-width: 25px;
       pointer-events: none;
       z-index: 1;
     }
@@ -122,21 +119,21 @@
       filter: invert(0.9) hue-rotate(180deg) brightness(0.25);
     }
 
-    /* Aseguramos que los hijos estén por encima de la capa del borde */
     .bordered-container > * {
       position: relative;
       z-index: 2;
     }
 
-    h1 { font-size: 2.2rem; margin: 0 0 5px; color: var(--text-main); font-weight: 800; }
-    .subtitle { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    h1 { font-size: 1.8rem; margin: 0 0 5px; color: var(--text-main); font-weight: 800; }
+    .subtitle { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
     .top-actions {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 10px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .top-btn, .time-btn {
@@ -144,11 +141,11 @@
       border: 2px solid var(--btn-border);
       color: var(--text-main);
       font-weight: bold;
-      padding: 6px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       text-decoration: none;
     }
 
@@ -159,7 +156,7 @@
 
     .top-btn { color: var(--btn-text); }
 
-    .time-btn { padding: 8px 18px; margin: 3px; color: var(--text-sub); }
+    .time-btn { padding: 6px 14px; margin: 2px; color: var(--text-sub); }
     .time-btn.active {
       background-color: #e67e22;
       color: white;
@@ -167,14 +164,16 @@
       box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
     }
 
-    #timer { font-size: 1.5rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px; }
-    #score { font-size: 4rem; font-weight: 800; color: var(--text-main); margin: 10px 0; }
+    #timer { font-size: 1.3rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px; }
+    #score { font-size: 3.5rem; font-weight: 800; color: var(--text-main); margin: 5px 0; }
 
     button#clicker {
-      padding: 35px 70px;
-      font-size: 2.2rem;
+      width: 100%;
+      max-width: 320px;
+      padding: 25px 20px;
+      font-size: 1.8rem;
       font-weight: bold;
-      margin: 10px;
+      margin: 10px auto;
       cursor: pointer;
       border-radius: 16px;
       border: none;
@@ -182,13 +181,16 @@
       color: white;
       box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
       transition: all 0.1s ease;
+      display: block;
+      /* Evita el destello gris al tocar en móviles */
+      -webkit-tap-highlight-color: transparent; 
     }
     button#clicker:hover { background: linear-gradient(135deg, #43A047, #388E3C); transform: translateY(-2px); }
     button#clicker:active { transform: translateY(2px); }
 
     #resetBtn {
-      padding: 12px 25px;
-      font-size: 1.1rem;
+      padding: 10px 20px;
+      font-size: 1rem;
       font-weight: bold;
       background: linear-gradient(135deg, #f44336, #e53935);
       color: white;
@@ -196,30 +198,29 @@
       border-radius: 12px;
       cursor: pointer;
       display: none;
-      margin-top: 15px;
+      margin: 15px auto 0 auto;
       box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
     }
 
     #stats {
-      margin-top: 25px;
-      font-size: 1.1rem;
-      line-height: 1.6;
+      margin-top: 20px;
+      font-size: 0.95rem;
+      line-height: 1.5;
       display: none;
       border: 2px solid var(--stats-border);
       border-radius: 14px;
-      padding: 15px;
-      max-width: 380px;
-      margin-left: auto;
-      margin-right: auto;
+      padding: 12px;
+      max-width: 100%;
       background-color: var(--stats-bg);
       color: var(--stats-color);
     }
 
-    #instructions { font-size: 0.95rem; margin-bottom: 15px; color: var(--text-sub); }
-    .comments-container h3 { margin-top: 0; color: var(--text-main); font-size: 1.3rem; border-bottom: 2px solid var(--btn-bg); padding-bottom: 10px; }
+    #instructions { font-size: 0.85rem; margin-bottom: 15px; color: var(--text-sub); }
+    .comments-container h3 { margin-top: 0; color: var(--text-main); font-size: 1.2rem; border-bottom: 2px solid var(--btn-bg); padding-bottom: 10px; }
 
     @media (max-width: 900px) {
       .main-layout { flex-direction: column; align-items: center; }
+      body { padding: 10px; }
     }
   </style>
 </head>
@@ -262,7 +263,7 @@
     <div class="sidebar-column">
       <div class="comments-container">
         <h3 id="comments-title">💬 Comentarios y Récords</h3>
-        <p id="comments-subtitle" style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 20px;">¡Deja tu marca o comparte tu récord con la comunidad! (Inicia sesión con GitHub para comentar)</p>
+        <p id="comments-subtitle" style="font-size: 0.80rem; color: var(--text-sub); margin-bottom: 15px;">¡Deja tu marca o comparte tu récord con la comunidad! (Inicia sesión con GitHub para comentar)</p>
         <div id="utterances-container"></div>
       </div>
     </div>
@@ -341,7 +342,7 @@
           clearInterval(timer);
           timer = null;
           clicker.disabled = true;
-          resetBtn.style.display = 'inline-block';
+          resetBtn.style.display = 'block';
           statsDiv.style.display = 'block';
           cpsHistory.push(clicksThisSecond);
           clicksThisSecond = 0;
@@ -376,6 +377,7 @@
       cpsHistory = [];
       clicksThisSecond = gameStarted = false;
       timerElement.textContent = formatTime(timeLeft);
+      scoreElement.score = score;
       scoreElement.textContent = score;
       clicker.disabled = false;
       resetBtn.style.display = statsDiv.style.display = 'none';
