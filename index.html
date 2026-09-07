@@ -38,24 +38,26 @@
       --stats-color: #81c784;
     }
 
-    /* Control dinámico de capas para View Transitions en ambos sentidos (claro <-> oscuro) */
+    /* Control bidireccional estricto para las View Transitions */
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
       mix-blend-mode: normal;
     }
 
-    .dark-mode::view-transition-old(root) {
+    /* Si vamos a modo oscuro: la nueva pantalla (oscura) se expande por encima */
+    .to-dark::view-transition-old(root) {
       z-index: 1;
     }
-    .dark-mode::view-transition-new(root) {
-      z-index: 999;
+    .to-dark::view-transition-new(root) {
+      z-index: 9999;
     }
 
-    html:not(.dark-mode)::view-transition-old(root) {
-      z-index: 999;
+    /* Si vamos a modo claro: la pantalla vieja (oscura) está arriba y se va contrayendo/revelando la clara abajo */
+    .to-light::view-transition-old(root) {
+      z-index: 9999;
     }
-    html:not(.dark-mode)::view-transition-new(root) {
+    .to-light::view-transition-new(root) {
       z-index: 1;
     }
 
@@ -345,18 +347,17 @@
       const currentLang = (navigator.language || navigator.userLanguage).startsWith('es') ? 'es' : 'en';
       const themeToggleBtn = document.getElementById('theme-toggle');
 
-      function loadUtterances(isDark) {
+      // Inicializa Utterances una sola vez y luego usa postMessage para cambiar el tema sin recargar
+      function initUtterances(isDark) {
         const container = document.getElementById('utterances-container');
         if (!container) return;
 
-        if (container.querySelector('script')) {
-          const iframe = container.querySelector('iframe');
-          if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage({
-              type: 'set-theme',
-              theme: isDark ? 'github-dark' : 'github-light'
-            }, 'https://utteranc.es');
-          }
+        const existingIframe = container.querySelector('iframe');
+        if (existingIframe) {
+          existingIframe.contentWindow.postMessage({
+            type: 'set-theme',
+            theme: isDark ? 'github-dark' : 'github-light'
+          }, 'https://utteranc.es');
           return;
         }
 
@@ -376,10 +377,10 @@
         if (themeToggleBtn) {
           themeToggleBtn.textContent = translations[currentLang][isDark ? 'lightMode' : 'darkMode'];
         }
-        loadUtterances(isDark);
+        initUtterances(isDark);
       }
 
-      // Transición fluida, completa hasta las esquinas (sin latigazo) y bidireccional perfecta
+      // Transición fluida, sin cortes abruptos al final y correcta en ambas direcciones
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
@@ -387,11 +388,15 @@
         const x = event.clientX;
         const y = event.clientY;
         
-        // Margen extra (+60px) para cubrir por completo las esquinas sin cortes abruptos finales
+        // Margen de seguridad amplio (+150px) y curva con desaceleración muy progresiva para evitar el latigazo final
         const maxRadius = Math.hypot(
           Math.max(x, window.innerWidth - x),
           Math.max(y, window.innerHeight - y)
-        ) + 60;
+        ) + 150;
+
+        // Añadimos clases al body/html para indicar la dirección de la transición en el CSS
+        document.documentElement.classList.remove('to-dark', 'to-light');
+        document.documentElement.classList.add(newDarkState ? 'to-dark' : 'to-light');
 
         if (document.startViewTransition) {
           const transition = document.startViewTransition(() => {
@@ -400,6 +405,7 @@
           });
 
           transition.ready.then(() => {
+            // Seleccionamos el pseudo-elemento correcto según la dirección
             const targetPseudo = newDarkState ? '::view-transition-new(root)' : '::view-transition-old(root)';
 
             document.documentElement.animate(
@@ -410,8 +416,8 @@
                 ]
               },
               {
-                duration: 850,
-                easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', // Curva suave y natural hasta el último milisegundo
+                duration: 900,
+                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)', // Curva sumamente suave que desacelera de forma orgánica hasta el final exacto
                 pseudoElement: targetPseudo
               }
             );
@@ -419,7 +425,6 @@
           return;
         }
 
-        // Fallback por si el navegador no soporta View Transitions
         localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
         setThemeUI(newDarkState);
       };
