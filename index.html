@@ -7,15 +7,17 @@
   <title>VelocityClick - The Ultimate CPS Test</title>
   <style>
     :root {
-      --bg-color: #FDFBF7;
-      --container-bg: #FDFBF7;
-      --text-main: #2c3e50;
-      --text-sub: #7f8c8d;
-      --btn-bg: #f4efe6;
-      --btn-border: #dcd6cd;
-      --btn-hover: #e8e2d5;
+      --bg-color: #f8f9fa;
+      --container-bg: #ffffff;
+      --text-main: #212529;
+      --text-sub: #6c757d;
+      --btn-bg: #f1f3f5;
+      --btn-border: #dee2e6;
+      --btn-hover: #e9ecef;
       --btn-text: #e67e22;
-      --stats-bg: #f1f8e9;
+      --border-color: #e3e6f0;
+      --shadow-color: rgba(0, 0, 0, 0.06);
+      --stats-bg: #e8f5e9;
       --stats-border: #a5d6a7;
       --stats-color: #2e7d32;
     }
@@ -23,12 +25,14 @@
     .dark-mode {
       --bg-color: #121212;
       --container-bg: #1e1e1e;
-      --text-main: #f1f1f1;
-      --text-sub: #aaa;
-      --btn-bg: #2a2a2a;
-      --btn-border: #444;
-      --btn-hover: #383838;
+      --text-main: #f8f9fa;
+      --text-sub: #adb5bd;
+      --btn-bg: #2b2b2b;
+      --btn-border: #383838;
+      --btn-hover: #3a3a3a;
       --btn-text: #ffa726;
+      --border-color: #333333;
+      --shadow-color: rgba(0, 0, 0, 0.4);
       --stats-bg: #1b2e1b;
       --stats-border: #2e7d32;
       --stats-color: #81c784;
@@ -36,11 +40,11 @@
 
     html, body {
       background-color: var(--bg-color);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       margin: 0;
-      padding: 15px;
+      padding: 20px;
       user-select: none;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease;
       box-sizing: border-box;
     }
 
@@ -50,9 +54,9 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 20px;
+      gap: 24px;
       max-width: 1150px;
-      margin: 0 auto;
+      margin: 40px auto;
     }
 
     .game-column, .sidebar-column {
@@ -64,114 +68,136 @@
       gap: 20px;
     }
 
-    .comments-container {
-      padding: 20px;
+    /* Contenedor principal con diseño CSS puro y elegante */
+    .clean-card {
       background-color: var(--container-bg);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      text-align: left;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-      border: 1px solid var(--btn-border);
-    }
-
-    .bordered-container {
-      position: relative;
-      padding: 25px 15px;
-      background-color: var(--container-bg);
-      background-clip: padding-box;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border-radius: 24px;
+      padding: 35px 25px;
+      box-shadow: 0 12px 35px var(--shadow-color);
+      border: 2px solid var(--border-color);
       text-align: center;
-      transition: background-color 0.3s ease;
-      border: 25px solid transparent;
-      border-image-source: url('Borde.png');
-      border-image-slice: 33%;
-      border-image-repeat: round;
-      border-image-width: 25px;
+      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .bordered-container::before {
-      content: "";
-      position: absolute;
-      top: -25px; left: -25px; right: -25px; bottom: -25px;
-      border: 25px solid transparent;
-      border-image-source: url('Borde.png');
-      border-image-slice: 33%;
-      border-image-repeat: round;
-      border-image-width: 25px;
-      pointer-events: none;
-      z-index: 1;
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 4px;
+      color: var(--text-main);
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
-    .dark-mode .bordered-container::before {
-      filter: brightness(0.35) contrast(1.2);
+    .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
     }
-
-    .bordered-container > * { position: relative; z-index: 2; }
-
-    h1 { font-size: 1.8rem; margin: 0 0 5px; color: var(--text-main); font-weight: 800; }
-    .subtitle { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
     .top-actions {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
     .top-btn, .time-btn {
       background-color: var(--btn-bg);
-      border: 2px solid var(--btn-border);
+      border: 1px solid var(--btn-border);
       color: var(--text-main);
-      font-weight: bold;
-      padding: 6px 14px;
-      border-radius: 20px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
       font-size: 0.85rem;
       text-decoration: none;
     }
 
-    .top-btn:hover, .time-btn:hover { background-color: var(--btn-hover); transform: translateY(-1px); }
+    .top-btn:hover, .time-btn:hover {
+      background-color: var(--btn-hover);
+      transform: translateY(-1px);
+    }
+
     .top-btn { color: var(--btn-text); }
-    .time-btn { padding: 6px 14px; margin: 2px; color: var(--text-sub); }
+
+    #time-selector {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .time-btn {
+      padding: 6px 14px;
+      color: var(--text-sub);
+    }
+
     .time-btn.active {
       background-color: #e67e22;
       color: white;
       border-color: #d35400;
-      box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+      box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
     }
 
-    #timer { font-size: 1.3rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px; }
-    #score { font-size: 3.5rem; font-weight: 800; color: var(--text-main); margin: 5px 0; }
+    #instructions {
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      color: var(--text-sub);
+    }
+
+    #timer {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+    }
+
+    #score {
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 5px 0 20px;
+      line-height: 1;
+    }
 
     button#clicker {
       width: 100%;
       max-width: 320px;
-      padding: 25px 20px;
+      padding: 24px 20px;
       font-size: 1.8rem;
       font-weight: bold;
-      margin: 10px auto;
+      margin: 0 auto 15px auto;
       cursor: pointer;
-      border-radius: 16px;
+      border-radius: 18px;
       border: none;
-      background: linear-gradient(135deg, #4CAF50, #43A047);
+      background: linear-gradient(135deg, #4CAF50, #388E3C);
       color: white;
-      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+      box-shadow: 0 8px 22px rgba(76, 175, 80, 0.35);
       transition: all 0.1s ease;
       display: block;
-      -webkit-tap-highlight-color: transparent; 
+      -webkit-tap-highlight-color: transparent;
     }
-    button#clicker:hover { background: linear-gradient(135deg, #43A047, #388E3C); transform: translateY(-2px); }
-    button#clicker:active { transform: translateY(2px); }
+
+    button#clicker:hover {
+      background: linear-gradient(135deg, #43A047, #2E7D32);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(76, 175, 80, 0.45);
+    }
+
+    button#clicker:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
 
     #resetBtn {
-      padding: 10px 20px;
-      font-size: 1rem;
+      padding: 10px 24px;
+      font-size: 0.95rem;
       font-weight: bold;
-      background: linear-gradient(135deg, #f44336, #e53935);
+      background: linear-gradient(135deg, #f44336, #d32f2f);
       color: white;
       border: none;
       border-radius: 12px;
@@ -179,26 +205,55 @@
       display: none;
       margin: 15px auto 0 auto;
       box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+      transition: all 0.2s ease;
     }
+    #resetBtn:hover { transform: translateY(-1px); }
 
     #stats {
-      margin-top: 20px;
-      font-size: 0.95rem;
-      line-height: 1.5;
+      margin-top: 24px;
+      font-size: 0.9rem;
+      line-height: 1.6;
       display: none;
-      border: 2px solid var(--stats-border);
-      border-radius: 14px;
-      padding: 12px;
-      max-width: 100%;
+      border: 1px solid var(--stats-border);
+      border-radius: 16px;
+      padding: 16px;
       background-color: var(--stats-bg);
       color: var(--stats-color);
+      text-align: left;
     }
 
-    #instructions { font-size: 0.85rem; margin-bottom: 15px; color: var(--text-sub); }
-    .comments-container h3 { margin-top: 0; color: var(--text-main); font-size: 1.2rem; border-bottom: 2px solid var(--btn-bg); padding-bottom: 10px; }
+    #stats p { margin: 4px 0; }
+
+    /* Sección de Comentarios */
+    .comments-container {
+      background-color: var(--container-bg);
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 12px 35px var(--shadow-color);
+      border: 2px solid var(--border-color);
+      text-align: left;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .comments-container h3 {
+      margin-top: 0;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comments-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-bottom: 15px;
+    }
 
     @media (max-width: 900px) {
-      .main-layout { flex-direction: column; align-items: center; }
+      .main-layout { flex-direction: column; align-items: center; margin: 10px; }
       body { padding: 10px; }
     }
   </style>
@@ -206,8 +261,9 @@
 <body>
 
   <div class="main-layout">
+    <!-- Columna del Juego -->
     <div class="game-column">
-      <div class="bordered-container">
+      <div class="clean-card">
         <h1>VelocityClick</h1>
         <div class="subtitle">The Ultimate CPS Test</div>
         
@@ -223,26 +279,28 @@
           <button class="time-btn active" onclick="setTime(20)">20s</button>
         </div>
 
-        <div id="instructions"><p id="instruction-text">Elige el tiempo, haz clic en el botón tantas veces como puedas y ¡mide tus CPS!</p></div>
+        <div id="instructions">Elige el tiempo, haz clic en el botón tantas veces como puedas y ¡mide tus CPS!</div>
         <div id="timer">Time left: 20,00 seg</div>
         <div id="score">0</div>
+        
         <div><button id="clicker">¡Haz Clic!</button></div>
-        <div><button id="resetBtn">Restart</button></div>
+        <div><button id="resetBtn">Reiniciar Test</button></div>
 
         <div id="stats">
-          <p><strong id="stats-title">Game stats:</strong></p>
-          <p>Max CPS: <span id="maxCPS">0</span></p>
-          <p>Avg. CPS: <span id="avgCPS">0</span></p>
-          <p>Min CPS: <span id="minCPS">0</span></p>
-          <p><span id="record-label">Récord personal (total clicks):</span> <span id="personalRecord">0</span></p>
+          <p><strong>📊 Estadísticas de la partida:</strong></p>
+          <p>• Max CPS: <span id="maxCPS">0</span></p>
+          <p>• Promedio CPS: <span id="avgCPS">0</span></p>
+          <p>• Min CPS: <span id="minCPS">0</span></p>
+          <p>• Récord personal: <span id="personalRecord">0</span></p>
         </div>
       </div>
     </div>
 
+    <!-- Columna de Comentarios -->
     <div class="sidebar-column">
       <div class="comments-container">
-        <h3 id="comments-title">💬 Comentarios y Récords</h3>
-        <p id="comments-subtitle" style="font-size: 0.80rem; color: var(--text-sub); margin-bottom: 15px;">¡Deja tu marca o comparte tu récord con la comunidad! (Inicia sesión con GitHub para comentar)</p>
+        <h3>💬 Comentarios y Récords</h3>
+        <div class="comments-subtitle">¡Deja tu marca o comparte tu récord con la comunidad! (Inicia sesión con GitHub para comentar)</div>
         <div id="utterances-container"></div>
       </div>
     </div>
@@ -277,7 +335,7 @@
         const script = document.createElement('script');
         script.src = 'https://utteranc.es/client.js';
         script.setAttribute('repo', 'Arox43iq/Clicks-Per-Second-Test');
-        script.setAttribute('issue-term', 'title'); // Configurado por título para recuperar tus comentarios
+        script.setAttribute('issue-number', '1'); // Enlace directo a tu issue
         script.setAttribute('theme', isDark ? 'github-dark' : 'github-light');
         script.setAttribute('crossorigin', 'anonymous');
         script.async = true;
