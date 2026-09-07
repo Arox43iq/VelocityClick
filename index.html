@@ -254,7 +254,7 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY6px; }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -313,8 +313,6 @@
   </div>
 
   <script>
-    document.documentElement.style.setProperty('--transition-duration', '0.5s');
-
     document.addEventListener("DOMContentLoaded", () => {
       const translations = {
         es: { timeLeft: "Tiempo restante", unit: "seg", darkMode: "🌙 Modo Oscuro", lightMode: "☀️ Modo Claro" },
@@ -358,30 +356,16 @@
         loadUtterances(isDark);
       }
 
-      // Animación inversa inteligente: Cambia el tema de fondo de inmediato y expande el color anterior/nuevo con clip-path suave
+      // Animación de expansión circular forzada por JavaScript (evitando interferencias nativas)
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
 
-        // Si el navegador soporta View Transitions API de forma nativa (la mejor forma sin capas extra)
-        if (document.startViewTransition) {
-          document.startViewTransition(() => {
-            localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
-            setThemeUI(newDarkState);
-          });
-          return;
-        }
-
-        // Coordenadas del click
         const x = event.clientX;
         const y = event.clientY;
         const maxRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
 
-        // Aplicamos el nuevo tema inmediatamente al fondo real para que los elementos se vean bien
-        localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
-        setThemeUI(newDarkState);
-
-        // Creamos una capa temporal con el color del ANTERIOR tema que se va contrayendo (o revelando el fondo)
+        // Creamos una capa temporal con el color NUEVO que se expande en círculo desde el click
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
@@ -390,17 +374,23 @@
         overlay.style.height = '100vh';
         overlay.style.zIndex = '999999';
         overlay.style.pointerEvents = 'none';
-        overlay.style.backgroundColor = isDark ? '#0f1115' : '#f4f6f9';
-        // Empieza cubriendo todo y se hace un círculo de 0px en el punto del click (efecto de revelación limpia)
-        overlay.style.clipPath = `circle(${maxRadius}px at ${x}px ${y}px)`;
+        overlay.style.backgroundColor = newDarkState ? '#0f1115' : '#f4f6f9';
+        overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
         overlay.style.transition = 'clip-path 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
         
         document.body.appendChild(overlay);
 
         requestAnimationFrame(() => {
-          overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+          overlay.style.clipPath = `circle(${maxRadius}px at ${x}px ${y}px)`;
         });
 
+        // Cambiamos el tema de la página justo a mitad de la expansión para que coincida de forma fluida
+        setTimeout(() => {
+          localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
+          setThemeUI(newDarkState);
+        }, 250);
+
+        // Removemos la capa al terminar la animación
         setTimeout(() => {
           overlay.remove();
         }, 550);
