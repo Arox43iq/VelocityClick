@@ -106,8 +106,9 @@
       z-index: 1;
     }
 
+    /* Filtro oscuro equilibrado para que el borde no brille en blanco */
     .dark-mode .bordered-container::before {
-      filter: invert(1) hue-rotate(180deg) brightness(0.7);
+      filter: brightness(0.35) contrast(1.2);
     }
 
     .bordered-container > * {
@@ -270,6 +271,18 @@
 
     function loadUtterances(isDark) {
       const container = document.getElementById('utterances-container');
+      // Evitamos recargar el script si ya fue insertado para mantener la sesión y los comentarios estables
+      if (container.querySelector('script')) {
+        const iframe = container.querySelector('iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({
+            type: 'set-theme',
+            theme: isDark ? 'github-dark' : 'github-light'
+          }, 'https://utteranc.es');
+        }
+        return;
+      }
+
       container.innerHTML = '';
       const script = document.createElement('script');
       script.src = 'https://utteranc.es/client.js';
@@ -288,9 +301,10 @@
     }
 
     function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark-mode');
-      localStorage.setItem('velocityClickTheme', isDark ? 'dark' : 'light');
-      setThemeUI(isDark);
+      const isDark = document.documentElement.classList.contains('dark-mode');
+      const newDarkState = !isDark;
+      localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
+      setThemeUI(newDarkState);
     }
 
     setThemeUI(localStorage.getItem('velocityClickTheme') === 'dark');
