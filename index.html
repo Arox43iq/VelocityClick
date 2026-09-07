@@ -38,7 +38,7 @@
       --stats-color: #81c784;
     }
 
-    /* Estilos para la View Transition circular nativa */
+    /* Control dinámico de capas para View Transitions en ambos sentidos (claro <-> oscuro) */
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
@@ -52,10 +52,10 @@
       z-index: 999;
     }
 
-    ::view-transition-old(root) {
+    html:not(.dark-mode)::view-transition-old(root) {
       z-index: 999;
     }
-    ::view-transition-new(root) {
+    html:not(.dark-mode)::view-transition-new(root) {
       z-index: 1;
     }
 
@@ -379,17 +379,19 @@
         loadUtterances(isDark);
       }
 
-      // Transición fluida y pausada (800ms) para apreciar el círculo expansivo detalladamente
+      // Transición fluida, completa hasta las esquinas (sin latigazo) y bidireccional perfecta
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
 
         const x = event.clientX;
         const y = event.clientY;
+        
+        // Margen extra (+60px) para cubrir por completo las esquinas sin cortes abruptos finales
         const maxRadius = Math.hypot(
           Math.max(x, window.innerWidth - x),
           Math.max(y, window.innerHeight - y)
-        );
+        ) + 60;
 
         if (document.startViewTransition) {
           const transition = document.startViewTransition(() => {
@@ -398,6 +400,8 @@
           });
 
           transition.ready.then(() => {
+            const targetPseudo = newDarkState ? '::view-transition-new(root)' : '::view-transition-old(root)';
+
             document.documentElement.animate(
               {
                 clipPath: [
@@ -406,15 +410,16 @@
                 ]
               },
               {
-                duration: 800, // Aumentado a 800ms para que se note y sea totalmente fluido
-                easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-                pseudoElement: newDarkState ? '::view-transition-new(root)' : '::view-transition-old(root)'
+                duration: 850,
+                easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', // Curva suave y natural hasta el último milisegundo
+                pseudoElement: targetPseudo
               }
             );
           });
           return;
         }
 
+        // Fallback por si el navegador no soporta View Transitions
         localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
         setThemeUI(newDarkState);
       };
