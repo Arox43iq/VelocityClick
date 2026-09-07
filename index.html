@@ -38,7 +38,7 @@
       --stats-color: #81c784;
     }
 
-    /* Estilos avanzados para la View Transition circular nativa */
+    /* Estilos para la View Transition circular nativa */
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
@@ -379,12 +379,11 @@
         loadUtterances(isDark);
       }
 
-      // Transición moderna, fluida y profesional usando View Transitions API nativa con clip-path geométrico
+      // Transición fluida y pausada (800ms) para apreciar el círculo expansivo detalladamente
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
 
-        // Coordenadas exactas donde hiciste clic en el botón
         const x = event.clientX;
         const y = event.clientY;
         const maxRadius = Math.hypot(
@@ -392,7 +391,6 @@
           Math.max(y, window.innerHeight - y)
         );
 
-        // Si el navegador soporta transiciones de vista fluidas
         if (document.startViewTransition) {
           const transition = document.startViewTransition(() => {
             localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
@@ -408,8 +406,8 @@
                 ]
               },
               {
-                duration: 500,
-                easing: 'cubic-bezier(0.25, 1, 0.5, 1), cubic-bezier(0.4, 0, 0.2, 1)',
+                duration: 800, // Aumentado a 800ms para que se note y sea totalmente fluido
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 pseudoElement: newDarkState ? '::view-transition-new(root)' : '::view-transition-old(root)'
               }
             );
@@ -417,7 +415,6 @@
           return;
         }
 
-        // Fallback robusto por si acaso el navegador no soporta la API
         localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
         setThemeUI(newDarkState);
       };
@@ -488,7 +485,7 @@
           if (timerElement) timerElement.textContent = formatTime(timeLeft);
           let currentSecondFloor = Math.ceil(timeLeft);
           if (currentSecondFloor < lastSecondChecked) {
-            cpsHistory.push(clicksThisState = 0); // Corrección limpia
+            cpsHistory.push(clicksThisSecond);
             clicksThisSecond = 0;
             lastSecondChecked = currentSecondFloor;
           }
