@@ -38,6 +38,27 @@
       --stats-color: #81c784;
     }
 
+    /* Estilos avanzados para la View Transition circular nativa */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+
+    .dark-mode::view-transition-old(root) {
+      z-index: 1;
+    }
+    .dark-mode::view-transition-new(root) {
+      z-index: 999;
+    }
+
+    ::view-transition-old(root) {
+      z-index: 999;
+    }
+    ::view-transition-new(root) {
+      z-index: 1;
+    }
+
     html, body {
       background-color: var(--bg-color);
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -77,6 +98,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     h1 {
@@ -235,6 +257,7 @@
       box-shadow: 0 15px 40px var(--shadow-color);
       border: 1px solid var(--border-color);
       text-align: left;
+      transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     .comments-container h3 {
@@ -356,52 +379,47 @@
         loadUtterances(isDark);
       }
 
-     // Animación de onda expansiva translúcida sin bloquear la visibilidad
+      // Transición moderna, fluida y profesional usando View Transitions API nativa con clip-path geométrico
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
 
+        // Coordenadas exactas donde hiciste clic en el botón
         const x = event.clientX;
         const y = event.clientY;
-        const maxRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+        const maxRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y)
+        );
 
-        // 1. Cambiamos el tema de inmediato para que los elementos debajo ya tengan los colores correctos
+        // Si el navegador soporta transiciones de vista fluidas
+        if (document.startViewTransition) {
+          const transition = document.startViewTransition(() => {
+            localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
+            setThemeUI(newDarkState);
+          });
+
+          transition.ready.then(() => {
+            document.documentElement.animate(
+              {
+                clipPath: [
+                  `circle(0px at ${x}px ${y}px)`,
+                  `circle(${maxRadius}px at ${x}px ${y}px)`
+                ]
+              },
+              {
+                duration: 500,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1), cubic-bezier(0.4, 0, 0.2, 1)',
+                pseudoElement: newDarkState ? '::view-transition-new(root)' : '::view-transition-old(root)'
+              }
+            );
+          });
+          return;
+        }
+
+        // Fallback robusto por si acaso el navegador no soporta la API
         localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
         setThemeUI(newDarkState);
-
-        // 2. Creamos la onda expansiva con un color sólido pero semi-transparente o usando gradiente
-        const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.zIndex = '999999';
-        overlay.style.pointerEvents = 'none';
-        
-        // Usamos un color con ligera transparencia (o un gradiente en los bordes) para que no sea un bloque opaco
-        const themeColor = newDarkState ? 'rgba(15, 17, 21, 0.85)' : 'rgba(244, 246, 249, 0.85)';
-        overlay.style.backgroundColor = themeColor;
-        
-        // Empezamos con el círculo en 0px pero con una transición suave de clip-path y opacidad
-        overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
-        overlay.style.transition = 'clip-path 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease';
-        
-        document.body.appendChild(overlay);
-
-        requestAnimationFrame(() => {
-          // Al expandirse, también hacemos que la capa se empiece a desvanecer sutilmente en los últimos milisegundos
-          overlay.style.clipPath = `circle(${maxRadius}px at ${x}px ${y}px)`;
-        });
-
-        // Desvanecemos la capa antes de removerla para que no corte abruptamente
-        setTimeout(() => {
-          overlay.style.opacity = '0';
-        }, 350);
-
-        setTimeout(() => {
-          overlay.remove();
-        }, 550);
       };
 
       setThemeUI(localStorage.getItem('velocityClickTheme') === 'dark');
@@ -470,7 +488,7 @@
           if (timerElement) timerElement.textContent = formatTime(timeLeft);
           let currentSecondFloor = Math.ceil(timeLeft);
           if (currentSecondFloor < lastSecondChecked) {
-            cpsHistory.push(clicksThisSecond);
+            cpsHistory.push(clicksThisState = 0); // Corrección limpia
             clicksThisSecond = 0;
             lastSecondChecked = currentSecondFloor;
           }
