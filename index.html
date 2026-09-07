@@ -38,27 +38,18 @@
       --stats-color: #81c784;
     }
 
-    /* Control bidireccional estricto para las View Transitions */
+    /* Configuración estándar y limpia para View Transitions */
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
       mix-blend-mode: normal;
     }
 
-    /* Si vamos a modo oscuro: la nueva pantalla (oscura) se expande por encima */
-    .to-dark::view-transition-old(root) {
+    ::view-transition-old(root) {
       z-index: 1;
     }
-    .to-dark::view-transition-new(root) {
+    ::view-transition-new(root) {
       z-index: 9999;
-    }
-
-    /* Si vamos a modo claro: la pantalla vieja (oscura) está arriba y se va contrayendo/revelando la clara abajo */
-    .to-light::view-transition-old(root) {
-      z-index: 9999;
-    }
-    .to-light::view-transition-new(root) {
-      z-index: 1;
     }
 
     html, body {
@@ -347,7 +338,6 @@
       const currentLang = (navigator.language || navigator.userLanguage).startsWith('es') ? 'es' : 'en';
       const themeToggleBtn = document.getElementById('theme-toggle');
 
-      // Inicializa Utterances una sola vez y luego usa postMessage para cambiar el tema sin recargar
       function initUtterances(isDark) {
         const container = document.getElementById('utterances-container');
         if (!container) return;
@@ -380,7 +370,7 @@
         initUtterances(isDark);
       }
 
-      // Transición fluida, sin cortes abruptos al final y correcta en ambas direcciones
+      // Transición fluida corregida: animando siempre ::view-transition-new(root) con margen gigante y sin cortes
       window.toggleTheme = function(event) {
         const isDark = document.documentElement.classList.contains('dark-mode');
         const newDarkState = !isDark;
@@ -388,15 +378,11 @@
         const x = event.clientX;
         const y = event.clientY;
         
-        // Margen de seguridad amplio (+150px) y curva con desaceleración muy progresiva para evitar el latigazo final
+        // Margen extra de +400px para garantizar cobertura total sin latigazos en ninguna esquina
         const maxRadius = Math.hypot(
           Math.max(x, window.innerWidth - x),
           Math.max(y, window.innerHeight - y)
-        ) + 150;
-
-        // Añadimos clases al body/html para indicar la dirección de la transición en el CSS
-        document.documentElement.classList.remove('to-dark', 'to-light');
-        document.documentElement.classList.add(newDarkState ? 'to-dark' : 'to-light');
+        ) + 400;
 
         if (document.startViewTransition) {
           const transition = document.startViewTransition(() => {
@@ -405,9 +391,6 @@
           });
 
           transition.ready.then(() => {
-            // Seleccionamos el pseudo-elemento correcto según la dirección
-            const targetPseudo = newDarkState ? '::view-transition-new(root)' : '::view-transition-old(root)';
-
             document.documentElement.animate(
               {
                 clipPath: [
@@ -417,8 +400,8 @@
               },
               {
                 duration: 900,
-                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)', // Curva sumamente suave que desacelera de forma orgánica hasta el final exacto
-                pseudoElement: targetPseudo
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)', // Expansión suave, natural y sin cortes bruscos finales
+                pseudoElement: '::view-transition-new(root)'
               }
             );
           });
