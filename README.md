@@ -16,3 +16,12 @@ Si eres desarrollador y quieres correrlo localmente en tu computadora:
 1. Clona el repositorio:
 
    git clone [https://github.com/Arox43iq/VelocityClick.git](https://github.com/Arox43iq/VelocityClick.git)
+
+2.Instala las dependencias:
+
+npm install
+
+
+3.Inicia el servidor de desarrollo:
+
+npm run dev
