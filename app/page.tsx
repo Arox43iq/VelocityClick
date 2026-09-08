@@ -43,7 +43,7 @@ export default function Home() {
     setPersonalRecord(savedRecord ? parseInt(savedRecord, 10) : 0);
   }, [timeTotal]);
 
-  // Cambiar Tema con animación View Transition si está disponible y sincronizar Giscus
+  // Cambiar Tema con animación View Transition
   const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newDarkState = !isDarkMode;
     const x = e.clientX;
@@ -57,21 +57,6 @@ export default function Home() {
       setIsDarkMode(newDarkState);
       localStorage.setItem('velocityClickTheme', newDarkState ? 'dark' : 'light');
       document.documentElement.classList.toggle('dark-mode', newDarkState);
-
-      // Forzar actualización de tema en el iframe de Giscus mediante postMessage
-      const iframe = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement;
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(
-          {
-            giscus: {
-              setConfig: {
-                theme: newDarkState ? 'github-dark' : 'light',
-              },
-            },
-          },
-          'https://giscus.app'
-        );
-      }
     };
 
     if (document.startViewTransition) {
@@ -335,9 +320,10 @@ export default function Home() {
               ¡Deja tu marca o comparte tu récord con la comunidad! (Inicia sesión con GitHub para comentar)
             </div>
             
-            {/* Componente Giscus con sincronización de mensajes para el tema */}
+            {/* Componente Giscus con key dinámica para refrescar el iframe al cambiar de tema */}
             <div className="w-full">
               <Giscus
+                key={isDarkMode ? 'dark' : 'light'}
                 repo="Arox43iq/VelocityClick"
                 repoId="R_kgDOPLu7zA"
                 category="Announcements"
