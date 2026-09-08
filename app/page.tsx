@@ -172,7 +172,7 @@ export default function Home() {
           --bg-color: #f0f2f5;
           --container-bg: #ffffff;
           --text-main: #111827;
-          --text-sub: #374151; /* Texto secundario más oscuro para contraste impecable en blanco */
+          --text-sub: #374151;
           --btn-bg: #f3f4f6;
           --btn-border: #cbd5e1;
           --btn-hover: #e5e7eb;
@@ -320,19 +320,19 @@ export default function Home() {
               ¡Deja tu marca o comparte tu récord con la comunidad! (Inicia sesión con GitHub para comentar)
             </div>
             
-            {/* Componente Giscus con tema específico claro/oscuro para corregir visibilidad interna */}
+            {/* Componente Giscus con tus nuevos identificadores exactos */}
             <div className="w-full">
               <Giscus
                 repo="Arox43iq/VelocityClick"
                 repoId="R_kgDOPLu7zA"
                 category="Announcements"
-                categoryId="DIC_kwDOPLu7zM4C1234"
+                categoryId="DIC_kwDOPLu7zM4DFHry"
                 mapping="pathname"
                 strict="0"
                 reactionsEnabled="1"
                 emitMetadata="0"
                 inputPosition="bottom"
-                theme={isDarkMode ? 'preferred_color_scheme' : 'light'}
+                theme={isDarkMode ? 'github-dark' : 'light'}
                 lang="es"
               />
             </div>
