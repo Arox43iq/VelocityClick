@@ -325,9 +325,9 @@ export default function Home() {
               <Giscus
                 key={isDarkMode ? 'dark' : 'light'}
                 repo="Arox43iq/VelocityClick"
-                repoId="R_kgDOPLu7zA"
+                repoId="R_kgDOUSAY4A"
                 category="Announcements"
-                categoryId="DIC_kwDOPLu7zM4DFHry"
+                categoryId="DIC_kwDOUSAY4M4DFH-G"
                 mapping="pathname"
                 strict="0"
                 reactionsEnabled="1"
